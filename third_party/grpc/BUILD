@@ -4,7 +4,7 @@ java_library(
     name = "grpc_benchmarks",
     licenses = ["permissive"],
     exports = [
-        "@grpc_benchmarks_artifact//jar",
+        "//external:grpc_benchmarks",
     ],
 )
 
@@ -12,7 +12,7 @@ java_library(
     name = "grpc_core",
     licenses = ["permissive"],
     exports = [
-        "@grpc_core_artifact//jar",
+        "//external:grpc_core",
     ],
 )
 
@@ -20,7 +20,7 @@ java_library(
     name = "grpc_netty",
     licenses = ["permissive"],
     exports = [
-        "@grpc_netty_artifact//jar",
+        "//external:grpc_netty",
     ],
 )
 
@@ -28,7 +28,7 @@ java_library(
     name = "grpc_protobuf",
     licenses = ["permissive"],
     exports = [
-        "@grpc_protobuf_artifact//jar",
+        "//external:grpc_protobuf",
     ],
 )
 
@@ -36,7 +36,7 @@ java_library(
     name = "grpc_protobuf_lite",
     licenses = ["permissive"],
     exports = [
-        "@grpc_protobuf_lite_artifact//jar",
+        "//external:grpc_protobuf_lite",
     ],
 )
 
@@ -44,7 +44,7 @@ java_library(
     name = "grpc_stub",
     licenses = ["permissive"],
     exports = [
-        "@grpc_stub_artifact//jar",
+        "//external:grpc_stub",
     ],
 )
 
@@ -53,6 +53,6 @@ java_library(
     testonly = 1,
     licenses = ["permissive"],
     exports = [
-        "@grpc_testing_artifact//jar",
+        "//external:grpc_testing",
     ],
 )

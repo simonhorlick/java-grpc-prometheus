@@ -3,7 +3,7 @@ package(default_visibility = ["//visibility:public"])
 java_library(
   name = "prometheus",
   exports = [
-    "@prometheus_client_artifact//jar",
+      "//external:prometheus_client",
   ],
   licenses = ["permissive"],
 )
