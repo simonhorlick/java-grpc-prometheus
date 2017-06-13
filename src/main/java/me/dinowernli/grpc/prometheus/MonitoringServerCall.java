@@ -58,7 +58,7 @@ class MonitoringServerCall<R,S> extends ForwardingServerCall.SimpleForwardingSer
     serverMetrics.recordCallStarted();
   }
 
-  private void reportEndMetrics(Status status) {
+  void reportEndMetrics(Status status) {
     serverMetrics.recordServerHandled(status.getCode());
     if (configuration.isIncludeLatencyHistograms()) {
       double latencySec =

@@ -4,19 +4,25 @@ package me.dinowernli.grpc.prometheus;
 
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.ServerCall;
+import io.grpc.ServerCall.Listener;
+import io.grpc.Status;
 
 /**
  * A {@link ForwardingServerCallListener} which updates Prometheus metrics for a single rpc based
  * on updates received from grpc.
  */
-class MonitoringServerCallListener<R> extends ForwardingServerCallListener<R> {
+class MonitoringServerCallListener<R, S> extends ForwardingServerCallListener<R> {
   private final ServerCall.Listener<R> delegate;
   private final GrpcMethod grpcMethod;
+  private final MonitoringServerCall<R, S> monitoringCall;
   private final ServerMetrics serverMetrics;
 
   MonitoringServerCallListener(
-      ServerCall.Listener<R> delegate, ServerMetrics serverMetrics, GrpcMethod grpcMethod) {
+      Listener<R> delegate,
+      MonitoringServerCall<R, S> monitoringCall,
+      ServerMetrics serverMetrics, GrpcMethod grpcMethod) {
     this.delegate = delegate;
+    this.monitoringCall = monitoringCall;
     this.serverMetrics = serverMetrics;
     this.grpcMethod = grpcMethod;
   }
@@ -33,4 +39,27 @@ class MonitoringServerCallListener<R> extends ForwardingServerCallListener<R> {
     }
     super.onMessage(request);
   }
+
+  @Override public void onHalfClose() {
+    try {
+      super.onHalfClose();
+    } catch (RuntimeException ex) {
+      handleException(ex);
+      throw ex;
+    }
+  }
+
+  @Override public void onReady() {
+    try {
+      super.onReady();
+    } catch (RuntimeException ex) {
+      handleException(ex);
+      throw ex;
+    }
+  }
+
+  private void handleException(RuntimeException ex) {
+    monitoringCall.reportEndMetrics(Status.fromThrowable(ex));
+  }
+
 }
