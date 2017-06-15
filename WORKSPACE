@@ -9,7 +9,13 @@ http_archive(
 
 load("@grpc_java//:repositories.bzl", "grpc_java_repositories")
 
-grpc_java_repositories()
+grpc_java_repositories(omit_com_google_guava=True)
+
+maven_jar(
+    name = "com_google_guava",
+    artifact = "com.google.guava:guava:20.0",
+    sha1 = "89507701249388e1ed5ddcf8c41f4ce1be7831ef",
+)
 
 maven_jar(
     name = "junit_artifact",
