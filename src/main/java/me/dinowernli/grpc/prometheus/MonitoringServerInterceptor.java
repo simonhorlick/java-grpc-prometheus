@@ -2,6 +2,7 @@
 
 package me.dinowernli.grpc.prometheus;
 
+import com.google.common.base.Stopwatch;
 import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
 import io.grpc.ServerCall;
@@ -37,7 +38,7 @@ public class MonitoringServerInterceptor implements ServerInterceptor {
     ServerMetrics metrics = serverMetricsFactory.createMetricsForMethod(method);
     GrpcMethod grpcMethod = GrpcMethod.of(method);
 
-    MonitoringServerCall<R,S> monitoringCall = new MonitoringServerCall<>(call, clock, grpcMethod, metrics, configuration);
+    MonitoringServerCall<R,S> monitoringCall = new MonitoringServerCall<>(call, Stopwatch.createStarted(), grpcMethod, metrics, configuration);
 
     Listener<R> listener = next.startCall(monitoringCall, requestHeaders);
 

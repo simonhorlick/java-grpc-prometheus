@@ -2,39 +2,36 @@
 
 package me.dinowernli.grpc.prometheus;
 
-import java.time.Clock;
-import java.time.Instant;
-
+import com.google.common.base.Stopwatch;
 import io.grpc.ForwardingServerCall;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
 import io.grpc.Status;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A {@link ForwardingServerCall} which updates Prometheus metrics based on the server-side actions
  * taken for a single rpc, e.g., messages sent, latency, etc.
  */
 class MonitoringServerCall<R,S> extends ForwardingServerCall.SimpleForwardingServerCall<R,S> {
-  private static final long MILLIS_PER_SECOND = 1000L;
+  private static final long MICROS_PER_SECOND = 1000_000L;
 
-  private final Clock clock;
+  private final Stopwatch stopwatch;
   private final GrpcMethod grpcMethod;
   private final ServerMetrics serverMetrics;
   private final Configuration configuration;
-  private final Instant startInstant;
 
   MonitoringServerCall(
       ServerCall<R,S> delegate,
-      Clock clock,
+      Stopwatch stopwatch,
       GrpcMethod grpcMethod,
       ServerMetrics serverMetrics,
       Configuration configuration) {
     super(delegate);
-    this.clock = clock;
+    this.stopwatch = stopwatch;
     this.grpcMethod = grpcMethod;
     this.serverMetrics = serverMetrics;
     this.configuration = configuration;
-    this.startInstant = clock.instant();
 
     // TODO(dino): Consider doing this in the onReady() method of the listener instead.
     reportStartMetrics();
@@ -62,7 +59,7 @@ class MonitoringServerCall<R,S> extends ForwardingServerCall.SimpleForwardingSer
     serverMetrics.recordServerHandled(status.getCode());
     if (configuration.isIncludeLatencyHistograms()) {
       double latencySec =
-          (clock.millis() - startInstant.toEpochMilli()) / (double) MILLIS_PER_SECOND;
+          (stopwatch.elapsed(TimeUnit.MICROSECONDS)) / (double) MICROS_PER_SECOND;
       serverMetrics.recordLatency(latencySec);
     }
   }

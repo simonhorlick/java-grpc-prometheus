@@ -7,5 +7,6 @@ java_library(
         "@grpc_java//core",
         "@grpc_java//stub",
         "@io_prometheus_simpleclient//jar",
+        "@com_google_guava//jar",
     ],
 )
