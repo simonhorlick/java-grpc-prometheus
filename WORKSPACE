@@ -1,13 +1,16 @@
 workspace(name = "me_dinowernli_java_grpc_prometheus")
 
+# This is currently forked to fix support for protobuf java lite on Android.
+GRPC_JAVA_COMMIT = "61f2528ccd839199de2a750bad407b188a6fe68d"
+
 http_archive(
-    name = "grpc_java",
-    sha256 = "956c7258c53f45824e3ce6d7e7e2211dc40640c1ba685f7c895c174fbd9106ba",
-    strip_prefix = "grpc-java-5ea8323164f7dae9ca972324d6e42344a1d04035",
-    urls = ["https://github.com/simonhorlick/grpc-java/archive/5ea8323164f7dae9ca972324d6e42344a1d04035.tar.gz"],
+    name = "io_grpc_grpc_java",
+    sha256 = "71a32201ac6e1315c0883a84fb17d41159e4d78a74c8f38c1226931909caa5f6",
+    strip_prefix = "grpc-java-" + GRPC_JAVA_COMMIT,
+    urls = ["https://github.com/grpc/grpc-java/archive/" + GRPC_JAVA_COMMIT + ".tar.gz"],
 )
 
-load("@grpc_java//:repositories.bzl", "grpc_java_repositories")
+load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
 
 grpc_java_repositories(omit_com_google_guava=True)
 
